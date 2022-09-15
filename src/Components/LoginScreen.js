@@ -4,18 +4,54 @@ import Logo from '../Assets/Logo.png';
 import CustomInput from "./CustomInput";
 import CustomButton from "./CustomButton";
 import { SafeAreaView } from "react-native-safe-area-context";
+import {useState} from "react";
+import { LoginCreds } from "../Data/LoginCreds";
 
 const LoginScreen = ({navigation}) => {
     const {height} = useWindowDimensions();
+    const [formValue,setFormValue] =useState({
+        userName:'',
+        password:''
+    });
+
+    const [isLogedIn,setIsLogedIn] = useState();
+
+    const handlePress = () => {
+        console.warn(formValue);
+        
+        if(formValue.userName===LoginCreds.userName && formValue.password===LoginCreds.password)
+        { console.warn(isLogedIn);
+            setIsLogedIn(true);
+            
+            navigation.navigate("MyMovies");
+        } else {
+            setIsLogedIn(false);
+        }
+        console.warn(isLogedIn);
+        console.warn(!isLogedIn && isLogedIn!==undefined  || formValue.userName ==='' || formValue.password == '');
+    }
+
 return(
     <SafeAreaView style= {styles.root}>
     <View style={styles.container}>
         <Image 
         source={Logo} style={[styles.logo, {height:height*0.1}] } resizeMode="contain" />
             <Text style={styles.title}>My Movies</Text>
-            <CustomInput placeholder={'Username'}/>
-            <CustomInput placeholder={'password'}/>
-            <CustomButton text={'Login'} />
+            <CustomInput placeholder={'Username'}
+            textValue={(value) => setFormValue({...formValue,userName:value})}
+            isPasswordText={false}
+            />
+            <CustomInput placeholder={'password'} 
+            textValue={(value) => setFormValue({...formValue,password:value})}
+            isPasswordText={true} 
+            />
+
+            {((!isLogedIn && isLogedIn!==undefined ) || formValue.userName ==='' || formValue.password == '') &&
+                <Text styles={styles.warning}>Please enter valid credentials</Text>
+            }
+            <CustomButton text={'Login'} 
+            onPress={handlePress} 
+            />
             <View style={styles.signUpContainer}>
             <Text style={styles.text}>Don't have an account? </Text>
             <Text style={styles.boldText} onPress={()=> navigation.navigate("signUp")}> Sign Up</Text>
@@ -61,6 +97,10 @@ const styles = StyleSheet.create({
     signUpContainer: {
         marginTop: 15,
         flexDirection: 'row',
+    },
+    warning: {
+        color:"grey",
+        fontSize:13,
     }
 
 });

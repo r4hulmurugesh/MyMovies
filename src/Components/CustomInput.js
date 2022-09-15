@@ -1,14 +1,26 @@
 import React from "react";
 import { View , Text ,Image, StyleSheet, useWindowDimensions, TextInput} from "react-native";
 
-const CustomInput = ( { value, setValue,placeholder }) => {
+const CustomInput = ( { textValue , placeholder, isPasswordText }) => {
     const {height} = useWindowDimensions();
 return(
     <View style={styles.container}>
+        { isPasswordText ?
         <TextInput 
-        value={value}
-
-        placeholder={placeholder} style={styles.input}></TextInput>
+        placeholder={placeholder} 
+        style={styles.input}
+        onChangeText={textValue}
+        secureTextEntry
+        />
+        :
+        <TextInput 
+        placeholder={placeholder} 
+        style={styles.input}
+        onChangeText={textValue}
+        
+        />
+        }
+        
     </View>
 )
 }
